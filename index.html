@@ -26,10 +26,7 @@ body {
   box-shadow: 0 3px 15px #0001;
 }
 
-h2 {
-  text-align: center;
-  margin-top: 0;
-}
+h2 { text-align: center; margin-top: 0; }
 
 label {
   display: block;
@@ -65,9 +62,7 @@ button {
   cursor: pointer;
 }
 
-button.download {
-  background: #168449;
-}
+button.download { background: #168449; }
 
 button:disabled {
   background: #aab5bf;
@@ -119,14 +114,39 @@ button:disabled {
 <label>Número de comprobante</label>
 <input id="numero" placeholder="Ejemplo: FC4-0101">
 
-<label>Descripción</label>
-<input id="descripcion" placeholder="Ejemplo: GNV">
+<label>Tipo de combustible</label>
+<select id="descripcion">
+  <option value="">Seleccionar combustible</option>
+  <option value="GNV">GNV</option>
+  <option value="GLP">GLP</option>
+  <option value="PREMIUM">PREMIUM</option>
+  <option value="REGULAR">REGULAR</option>
+  <option value="DIESEL">DIESEL</option>
+</select>
 
 <label>Persona</label>
 <input id="persona" placeholder="Nombre de la persona">
 
-<label>Placa</label>
-<input id="placa" placeholder="Ejemplo: ALV-195">
+<label>Placa del vehículo</label>
+<select id="placa">
+  <option value="">Seleccionar placa</option>
+  <option>BZN303</option>
+  <option>CBW636</option>
+  <option>BBK870</option>
+  <option>BZI116</option>
+  <option>BAB567</option>
+  <option>AUZ071</option>
+  <option>BJQ848</option>
+  <option>BSU619</option>
+  <option>CBW526</option>
+  <option>BBK904</option>
+  <option>B0A554</option>
+  <option>AUA903</option>
+  <option>AZE247</option>
+  <option>ALV195</option>
+  <option>DAJ280</option>
+  <option>DAK469</option>
+</select>
 
 <label>Fecha</label>
 <input id="fecha" type="date">
@@ -200,7 +220,7 @@ function texto(text, x, y, size, weight="normal",
   ctx.fillText(text, x, y);
 }
 
-// Limpiar estado cuando cambian los datos
+// Invalidar comprobante al cambiar datos
 function invalidar() {
   generado = false;
   $("descargar").disabled = true;
@@ -217,9 +237,9 @@ document.querySelectorAll("input, select").forEach(elemento => {
 function generar() {
 
   const numero = $("numero").value.trim();
-  const descripcion = $("descripcion").value.trim();
+  const descripcion = $("descripcion").value;
   const persona = $("persona").value.trim();
-  const placa = $("placa").value.trim();
+  const placa = $("placa").value;
   const fecha = $("fecha").value;
   const hora = $("hora").value.trim();
   const periodo = $("periodo").value;
@@ -231,7 +251,7 @@ function generar() {
     return;
   }
 
-  // Validar hora de 12 horas
+  // Validar hora
   const coincidencia = hora.match(/^(\d{1,2}):(\d{2})$/);
 
   if (!coincidencia) {
@@ -289,9 +309,9 @@ function generar() {
   texto("N° " + numero,540,300,43,
         "bold","#111","center");
 
-  // Descripción
-  texto("DESCRIPCION:",57,399,34,"bold");
-  texto(descripcion,370,399,35);
+  // Combustible
+  texto("COMBUSTIBLE:",57,399,34,"bold");
+  texto(descripcion,370,399,35,"bold");
 
   // Línea punteada
   ctx.beginPath();
@@ -308,7 +328,7 @@ function generar() {
   texto(persona,295,468,34,"bold");
 
   texto("PLACA:",655,468,34,"bold");
-  texto(placa,817,468,33);
+  texto(placa,817,468,33,"bold");
 
   // Fecha
   const fechaFinal = fecha.split("-").reverse().join("/");
@@ -316,11 +336,11 @@ function generar() {
   texto("FECHA:",57,532,34,"bold");
   texto(fechaFinal,305,532,34,"bold");
 
-  // Hora con AM / PM
+  // Hora
   texto("HORA:",655,532,34,"bold");
   texto(horaFinal,820,532,35,"bold");
 
-  // Mostrar imagen recién generada
+  // Mostrar comprobante
   canvas.style.display = "block";
   $("vacio").style.display = "none";
 
