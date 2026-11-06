@@ -7,7 +7,9 @@
 <title>Comprobantes Martínez</title>
 
 <style>
-* { box-sizing: border-box; }
+* {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
@@ -26,7 +28,10 @@ body {
   box-shadow: 0 3px 15px #0001;
 }
 
-h2 { text-align: center; margin-top: 0; }
+h2 {
+  text-align: center;
+  margin-top: 0;
+}
 
 label {
   display: block;
@@ -41,6 +46,7 @@ input, select {
   border-radius: 8px;
   font-size: 16px;
   background: white;
+  color: #172b43;
 }
 
 .time-row {
@@ -60,9 +66,16 @@ button {
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.2s;
 }
 
-button.download { background: #168449; }
+button:hover {
+  opacity: 0.9;
+}
+
+button.download {
+  background: #168449;
+}
 
 button:disabled {
   background: #aab5bf;
@@ -100,7 +113,9 @@ button:disabled {
 }
 
 @media(max-width:480px) {
-  .container { padding: 16px; }
+  .container {
+    padding: 16px;
+  }
 }
 </style>
 </head>
@@ -111,9 +126,15 @@ button:disabled {
 
 <h2>Generador de abastecimientos</h2>
 
+<!-- NUMERO -->
 <label>Número de comprobante</label>
-<input id="numero" placeholder="Ejemplo: FC4-0101">
+<input
+  id="numero"
+  type="text"
+  placeholder="Ejemplo: FC4-0101"
+>
 
+<!-- COMBUSTIBLE -->
 <label>Tipo de combustible</label>
 <select id="descripcion">
   <option value="">Seleccionar combustible</option>
@@ -124,46 +145,72 @@ button:disabled {
   <option value="DIESEL">DIESEL</option>
 </select>
 
-<label>Persona</label>
-<input id="persona" placeholder="Nombre de la persona">
+<!-- CHOFER -->
+<label>Chofer</label>
+<select id="persona">
+  <option value="">Seleccionar chofer</option>
+  <option value="ALAN MARTINEZ">ALAN MARTINEZ</option>
+  <option value="ABRAHAM">ABRAHAM</option>
+  <option value="JAIME">JAIME</option>
+  <option value="JORGE">JORGE</option>
+  <option value="E. MEDINA">E. MEDINA</option>
+  <option value="E. ROMERO">E. ROMERO</option>
+  <option value="J. DIAZ">J. DIAZ</option>
+  <option value="J. GRADOS">J. GRADOS</option>
+  <option value="MARCO DIAZ">MARCO DIAZ</option>
+  <option value="DANY">DANY</option>
+  <option value="VICTOR">VICTOR</option>
+  <option value="EDUARDO">EDUARDO</option>
+  <option value="LUIS">LUIS</option>
+</select>
 
+<!-- PLACAS -->
 <label>Placa del vehículo</label>
 <select id="placa">
   <option value="">Seleccionar placa</option>
-  <option>BZN303</option>
-  <option>CBW636</option>
-  <option>BBK870</option>
-  <option>BZI116</option>
-  <option>BAB567</option>
-  <option>AUZ071</option>
-  <option>BJQ848</option>
-  <option>BSU619</option>
-  <option>CBW526</option>
-  <option>BBK904</option>
-  <option>B0A554</option>
-  <option>AUA903</option>
-  <option>AZE247</option>
-  <option>ALV195</option>
-  <option>DAJ280</option>
-  <option>DAK469</option>
+  <option>BZN-303</option>
+  <option>CBW-636</option>
+  <option>BBK-870</option>
+  <option>BZI-116</option>
+  <option>BAB-567</option>
+  <option>AUZ-071</option>
+  <option>BJQ-848</option>
+  <option>BSU-619</option>
+  <option>CBW-526</option>
+  <option>BBK-904</option>
+  <option>B0A-554</option>
+  <option>AUA-903</option>
+  <option>AZE-247</option>
+  <option>ALV-195</option>
+  <option>DAJ-280</option>
+  <option>DAK-469</option>
 </select>
 
+<!-- FECHA -->
 <label>Fecha</label>
 <input id="fecha" type="date">
 
+<!-- HORA -->
 <label>Hora</label>
 <div class="time-row">
-  <input id="hora" type="text" placeholder="Ejemplo: 9:50">
+  <input
+    id="hora"
+    type="text"
+    placeholder="Ejemplo: 9:50"
+  >
+
   <select id="periodo">
     <option value="AM">AM</option>
     <option value="PM">PM</option>
   </select>
 </div>
 
+<!-- GENERAR -->
 <button onclick="generar()">
-GENERAR COMPROBANTE
+  GENERAR COMPROBANTE
 </button>
 
+<!-- VISTA PREVIA -->
 <div class="preview">
 
   <div class="empty" id="vacio">
@@ -173,17 +220,26 @@ GENERAR COMPROBANTE
     </div>
   </div>
 
-  <canvas id="comprobante" width="1080" height="590"></canvas>
+  <canvas
+    id="comprobante"
+    width="1080"
+    height="590">
+  </canvas>
 
 </div>
 
-<button class="download" id="descargar"
-        onclick="descargar()" disabled>
-DESCARGAR IMAGEN PNG
+<!-- DESCARGAR -->
+<button
+  class="download"
+  id="descargar"
+  onclick="descargar()"
+  disabled
+>
+  DESCARGAR IMAGEN PNG
 </button>
 
 <p class="note">
-Tu comprobante estará listo para enviarlo por WhatsApp.
+  Tu comprobante estará listo para enviarlo por WhatsApp.
 </p>
 
 </div>
@@ -197,8 +253,9 @@ const ctx = canvas.getContext("2d");
 
 let generado = false;
 
-// Fecha actual local
+// FECHA ACTUAL
 function fechaActual() {
+
   const d = new Date();
 
   return [
@@ -210,9 +267,16 @@ function fechaActual() {
 
 $("fecha").value = fechaActual();
 
-// Dibujar texto
-function texto(text, x, y, size, weight="normal",
-                color="#111", align="left") {
+// DIBUJAR TEXTO
+function texto(
+  text,
+  x,
+  y,
+  size,
+  weight = "normal",
+  color = "#111",
+  align = "left"
+) {
 
   ctx.fillStyle = color;
   ctx.font = `${weight} ${size}px Arial`;
@@ -220,151 +284,229 @@ function texto(text, x, y, size, weight="normal",
   ctx.fillText(text, x, y);
 }
 
-// Invalidar comprobante al cambiar datos
+// INVALIDAR COMPROBANTE SI CAMBIAN LOS DATOS
 function invalidar() {
+
   generado = false;
+
   $("descargar").disabled = true;
+
   canvas.style.display = "none";
+
   $("vacio").style.display = "flex";
 }
 
 document.querySelectorAll("input, select").forEach(elemento => {
+
   elemento.addEventListener("input", invalidar);
   elemento.addEventListener("change", invalidar);
+
 });
 
-// Generar comprobante
+// GENERAR COMPROBANTE
 function generar() {
 
   const numero = $("numero").value.trim();
+
   const descripcion = $("descripcion").value;
-  const persona = $("persona").value.trim();
+
+  const persona = $("persona").value;
+
   const placa = $("placa").value;
+
   const fecha = $("fecha").value;
+
   const hora = $("hora").value.trim();
+
   const periodo = $("periodo").value;
 
-  if (!numero || !descripcion || !persona ||
-      !placa || !fecha || !hora) {
+  // VALIDAR CAMPOS
+  if (
+    !numero ||
+    !descripcion ||
+    !persona ||
+    !placa ||
+    !fecha ||
+    !hora
+  ) {
 
     alert("Por favor, completa todos los campos.");
+
     return;
   }
 
-  // Validar hora
+  // VALIDAR HORA
   const coincidencia = hora.match(/^(\d{1,2}):(\d{2})$/);
 
   if (!coincidencia) {
+
     alert("Escribe la hora en formato 9:50 o 09:50.");
+
     return;
   }
 
   const h = Number(coincidencia[1]);
+
   const m = Number(coincidencia[2]);
 
   if (h < 1 || h > 12 || m < 0 || m > 59) {
+
     alert("La hora ingresada no es válida.");
+
     return;
   }
 
   const horaFinal =
     `${h}:${String(m).padStart(2,"0")}${periodo.toLowerCase()}`;
 
-  // Fondo blanco
-  ctx.clearRect(0,0,1080,590);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0,0,1080,590);
+  // FONDO
+  ctx.clearRect(0, 0, 1080, 590);
 
-  // Marco azul
+  ctx.fillStyle = "#ffffff";
+
+  ctx.fillRect(0, 0, 1080, 590);
+
+  // MARCO AZUL
   ctx.strokeStyle = "#0877b5";
+
   ctx.lineWidth = 13;
 
   ctx.beginPath();
-  ctx.roundRect(18,12,1044,566,105);
+
+  ctx.roundRect(18, 12, 1044, 566, 105);
+
   ctx.stroke();
 
-  // Logotipo ilustrativo
+  // LOGOTIPO
   ctx.strokeStyle = "#193b5e";
+
   ctx.lineWidth = 3;
 
   ctx.beginPath();
-  ctx.roundRect(430,65,82,75,14);
+
+  ctx.roundRect(430, 65, 82, 75, 14);
+
   ctx.stroke();
 
   ctx.beginPath();
-  ctx.arc(471,102,27,0,Math.PI*2);
+
+  ctx.arc(471, 102, 27, 0, Math.PI * 2);
+
   ctx.stroke();
 
-  texto("M",471,113,36,"bold","#193b5e","center");
-  texto("Funeraria",520,91,30,"normal","#193b5e");
-  texto("Martínez",520,133,43,"bold","#193b5e");
-  texto("A su lado en todo momento",520,153,11,
-        "normal","#526477");
+  texto("M", 471, 113, 36, "bold", "#193b5e", "center");
 
-  // Título
-  texto("ABASTECIMIENTO -",540,218,51,
-        "normal","#bd2631","center");
+  texto("Funeraria", 520, 91, 30, "normal", "#193b5e");
 
-  // Número
-  texto("N° " + numero,540,300,43,
-        "bold","#111","center");
+  texto("Martínez", 520, 133, 43, "bold", "#193b5e");
 
-  // Combustible
-  texto("COMBUSTIBLE:",57,399,34,"bold");
-  texto(descripcion,370,399,35,"bold");
+  texto(
+    "A su lado en todo momento",
+    520,
+    153,
+    11,
+    "normal",
+    "#526477"
+  );
 
-  // Línea punteada
+  // TITULO
+  texto(
+    "ABASTECIMIENTO -",
+    540,
+    218,
+    51,
+    "normal",
+    "#bd2631",
+    "center"
+  );
+
+  // NUMERO
+  texto(
+    "N° " + numero,
+    540,
+    300,
+    43,
+    "bold",
+    "#111",
+    "center"
+  );
+
+  // COMBUSTIBLE
+  texto("COMBUSTIBLE:", 57, 399, 34, "bold");
+
+  texto(descripcion, 370, 399, 35, "bold");
+
+  // LINEA PUNTEADA
   ctx.beginPath();
-  ctx.setLineDash([5,6]);
-  ctx.moveTo(48,420);
-  ctx.lineTo(1032,420);
-  ctx.strokeStyle="#333";
-  ctx.lineWidth=2;
+
+  ctx.setLineDash([5, 6]);
+
+  ctx.moveTo(48, 420);
+
+  ctx.lineTo(1032, 420);
+
+  ctx.strokeStyle = "#333";
+
+  ctx.lineWidth = 2;
+
   ctx.stroke();
+
   ctx.setLineDash([]);
 
-  // Persona y placa
-  texto("PERSONA:",57,468,34,"bold");
-  texto(persona,295,468,34,"bold");
+  // CHOFER
+  texto("PERSONA:", 57, 468, 34, "bold");
 
-  texto("PLACA:",655,468,34,"bold");
-  texto(placa,817,468,33,"bold");
+  texto(persona, 295, 468, 34, "bold");
 
-  // Fecha
+  // PLACA
+  texto("PLACA:", 655, 468, 34, "bold");
+
+  texto(placa, 817, 468, 33, "bold");
+
+  // FECHA
   const fechaFinal = fecha.split("-").reverse().join("/");
 
-  texto("FECHA:",57,532,34,"bold");
-  texto(fechaFinal,305,532,34,"bold");
+  texto("FECHA:", 57, 532, 34, "bold");
 
-  // Hora
-  texto("HORA:",655,532,34,"bold");
-  texto(horaFinal,820,532,35,"bold");
+  texto(fechaFinal, 305, 532, 34, "bold");
 
-  // Mostrar comprobante
+  // HORA
+  texto("HORA:", 655, 532, 34, "bold");
+
+  texto(horaFinal, 820, 532, 35, "bold");
+
+  // MOSTRAR COMPROBANTE
   canvas.style.display = "block";
+
   $("vacio").style.display = "none";
 
   generado = true;
+
   $("descargar").disabled = false;
+
 }
 
-// Descargar PNG
+// DESCARGAR PNG
 function descargar() {
 
   if (!generado) {
+
     alert("Primero genera el comprobante.");
+
     return;
   }
 
   const numero = $("numero").value
-    .replace(/[^a-zA-Z0-9_-]/g,"_");
+    .replace(/[^a-zA-Z0-9_-]/g, "_");
 
   const link = document.createElement("a");
 
   link.download = (numero || "comprobante") + ".png";
+
   link.href = canvas.toDataURL("image/png");
 
   link.click();
+
 }
 
 </script>
